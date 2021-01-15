@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import './styles/index.css';
+import React from 'react';
+import { Board } from './Board';
+import '../styles/index.css';
 
 export const Game: React.FC = () => {
   return (
@@ -13,5 +14,4 @@ export const Game: React.FC = () => {
       </div>
     </div>
   );
-
-}
+};

@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import './styles/index.css';
+import '../styles/index.css';
 
-type SquareProps = { value: number };
+// type SquareProps = {
+//   handleClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+//   value: number;
+// };
 
-export const Square: React.FC<SquareProps> = () => {
+export const Square: React.FC = () => {
   const [value, setValue] = useState<string | null>(null);
   return (
     <button
