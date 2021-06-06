@@ -15,7 +15,7 @@ const WINNER_LINES = [
 ];
 
 export const Game: React.FC = () => {
-  const [history, setHistory] = useState<History<string | null>>({
+  const [stateHistory, setStateHistory] = useState<History<string | null>>({
     history: [{ squares: Array(9).fill(null) }],
   });
   const [xIsNext, setXIsNext] = useState<boolean>(true);
@@ -35,15 +35,15 @@ export const Game: React.FC = () => {
   };
 
   const handleClick = (i: number) => {
-    const current = history.history[history.history.length - 1];
+    const current = stateHistory.history[stateHistory.history.length - 1];
     const squares = current.squares.slice();
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
     squares[i] = xIsNext ? 'X' : 'O';
     setXIsNext(!xIsNext);
-    setHistory({
-      history: history.history.concat([
+    setStateHistory({
+      history: stateHistory.history.concat([
         {
           squares: squares,
         },
@@ -51,7 +51,7 @@ export const Game: React.FC = () => {
     });
   };
 
-  const current = history.history[history.history.length - 1];
+  const current = stateHistory.history[stateHistory.history.length - 1];
   const winner = calculateWinner(current.squares);
   let status;
   if (winner) {
