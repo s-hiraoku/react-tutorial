@@ -15,10 +15,11 @@ const WINNER_LINES = [
 ];
 
 export const Game: React.FC = () => {
-  const [stateHistory, setStateHistory] = useState<History<string | null>>({
-    history: [{ squares: Array(9).fill(null) }],
-  });
+  const [stateHistory, setStateHistory] = useState<History<string | null>>([
+    { squares: Array(9).fill(null) },
+  ]);
   const [xIsNext, setXIsNext] = useState<boolean>(true);
+  const [stepNumber, setStepNumber] = useState<number>(0);
 
   const calculateWinner = (squares: Array<string | null>) => {
     let result = null;
@@ -35,23 +36,24 @@ export const Game: React.FC = () => {
   };
 
   const handleClick = (i: number) => {
-    const current = stateHistory.history[stateHistory.history.length - 1];
+    const history = stateHistory.slice(0, stepNumber + 1);
+    const current = stateHistory[stateHistory.length - 1];
     const squares = current.squares.slice();
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
     squares[i] = xIsNext ? 'X' : 'O';
     setXIsNext(!xIsNext);
-    setStateHistory({
-      history: stateHistory.history.concat([
+    setStateHistory(
+      stateHistory.concat([
         {
           squares: squares,
         },
-      ]),
-    });
+      ])
+    );
+    setStepNumber(history.length);
   };
-
-  const current = stateHistory.history[stateHistory.history.length - 1];
+  const current = stateHistory[stepNumber];
   const winner = calculateWinner(current.squares);
   let status;
   if (winner) {
@@ -60,6 +62,20 @@ export const Game: React.FC = () => {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');
   }
 
+  const moves = stateHistory.map((step, move) => {
+    const desc = move ? 'Go to move #' + move : 'Go to game start';
+    return (
+      <li key={move}>
+        <button onClick={() => jumpTo(move)}>{desc}</button>
+      </li>
+    );
+  });
+
+  const jumpTo = (step: number) => {
+    setStepNumber(step);
+    setXIsNext(step % 2 === 0);
+  };
+
   return (
     <div className="game">
       <div className="game-board">
@@ -67,7 +83,7 @@ export const Game: React.FC = () => {
       </div>
       <div className="game-info">
         <div>{status}</div>
-        <ol>{/* TODO */}</ol>
+        <ol>{moves}</ol>
       </div>
     </div>
   );
